@@ -63,7 +63,8 @@ class Yokaze_Session
     }
 
     public function end(){
-        $_SESSION = array();
+        foreach ($_SESSION as $k => $v)
+            unset($_SESSION[$k]);
         if (isset($_COOKIE[session_name()])){
             setcookie(session_name(), '', time()-4200);
         }

@@ -42,8 +42,9 @@ class Yokaze_Template
     private function compile($tmpl)
     {
         // simple variables
-        $tmpl = preg_replace('/\{([[:alnum:]_>\'\[\]-]*):h\}/', '<?php echo $$1; ?>', $tmpl);
-        $tmpl = preg_replace('/\{([[:alnum:]_>\'\[\]-]*)\}/', '<?php echo htmlspecialchars($$1); ?>', $tmpl);
+        $tmpl = preg_replace('/(\{[[:alnum:]]+)\.([[:alnum:]]+\})/', '$1->$2', $tmpl);
+        $tmpl = preg_replace('/\{([[:alnum:]_>-]*):h\}/', '<?php echo $$1; ?>', $tmpl);
+        $tmpl = preg_replace('/\{([[:alnum:]_>-]*)\}/', '<?php echo htmlspecialchars($$1); ?>', $tmpl);
 
 
         /*

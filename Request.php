@@ -20,6 +20,13 @@ class Yokaze_Request
             $this->$k = $v;
     }
 
+    public function get($name)
+    {
+        if (isset($_GET[$name]))
+            return $_GET[$name];
+        elseif (isset($_POST[$name]))
+            return $_POST[$name];
+    }
     public function getMethod()
     {
         return $_SERVER['REQUEST_METHOD'];
