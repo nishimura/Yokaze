@@ -42,18 +42,10 @@ class Yokaze_Template
     private function compile($tmpl)
     {
         // simple variables
-        $tmpl = preg_replace('/(\{[[:alnum:]]+)\.([[:alnum:]]+\})/', '$1->$2', $tmpl);
+        $tmpl = preg_replace('/(\{[[:alnum:]]+)\.([[:alnum:]]+(:[a-z]+)?\})/', '$1->$2', $tmpl);
         $tmpl = preg_replace('/\{([[:alnum:]_>-]*):h\}/', '<?php echo $$1; ?>', $tmpl);
         $tmpl = preg_replace('/\{([[:alnum:]_>-]*)\}/', '<?php echo htmlspecialchars($$1); ?>', $tmpl);
 
-
-        /*
-         * {loop:argName} feature
-         */
-
-        /* $tmpl = '<?php $c = 0; ?>' . $tmpl;
-         * $tmpl = preg_replace('/\{loop:(.*?)\}/', '<?php $c++; ${\'b\' . $c} = clone $t; foreach($t->$1 as ${\'l\' . $c}){ foreach ( ${\'l\' . $c} as ${\'k\' . $c} => ${\'v\' . $c}){ $t->${\'k\' . $c} = ${\'v\' . $c}; } ?>', $tmpl);
-         * $tmpl = preg_replace('/\{endloop:}/', '<?php } $t = ${\'b\' . $c}; $c--; ?>', $tmpl); */
 
         return $tmpl;
     }

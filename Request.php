@@ -35,22 +35,26 @@ class Yokaze_Request
     {
         return strtolower($this->getMethod()) === 'post';
     }
-    public function initGet()
+    public function initGet($obj = null)
     {
+        if ($obj === null)
+            $obj = $this;
         if (!isset($_GET) || !is_array($_GET))
             return $this;
-        return $this->initReq($_GET);
+        return $this->initReq($_GET, $obj);
     }
-    public function initPost()
+    public function initPost($obj = null)
     {
+        if ($obj === null)
+            $obj = $this;
         if (!isset($_POST) || !is_array($_POST))
             return $this;
-        return $this->initReq($_POST);
+        return $this->initReq($_POST, $obj);
     }
-    private function initReq($req)
+    private function initReq($req, $obj)
     {
         foreach ($req as $k => $v)
-            $this->$k = $v;
+            $obj->$k = $v;
         return $this;
     }
     public function initDto($dto)
