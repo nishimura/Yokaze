@@ -29,26 +29,42 @@ class Yokaze_Template
         $file = basename($_SERVER['SCRIPT_FILENAME'], '.php') . '.' . $this->ext;
         $tmplFile = $this->templateDir . '/' . $file;
         $cacheFile = $this->cacheDir . '/' . $file;
+
+        $this->compile($tmplFile, $cacheFile);
+
+        $this->showCache($cacheFile, $vars);
+    }
+    private function compile($tmplFile, $cacheFile)
+    {
         if (file_exists($cacheFile) && filemtime($tmplFile) <= filemtime($cacheFile)){
-            $this->showCache($cacheFile, $vars);
             return;
         }
 
         $tmpl = file_get_contents($tmplFile);
-        $tmpl = $this->compile($tmpl);
-        file_put_contents($cacheFile, $tmpl);
-        $this->showCache($cacheFile, $vars);
-    }
-    private function compile($tmpl)
-    {
+
+        // include feature
+        $incPattern = '|{include:([[:alnum:]/]+\.html)}|';
+        if (preg_match_all($incPattern, $tmpl, $matches)){
+            foreach ($matches[1] as $file){
+                $t = $this->templateDir . '/' . $file;
+                $c = $this->cacheDir . '/' . $file;
+                $this->compile($t, $c);
+            }
+            $incReplace =
+                '<?php $this->compile(\'' .
+                $this->templateDir . '/$1\', \'' .
+                $this->cacheDir . '/$1\'' . ');' .
+                ' include \'' . $this->cacheDir . '/' . '$1\'; ?>';
+            $tmpl = preg_replace($incPattern, $incReplace, $tmpl);
+        }
+
         // simple variables
         $tmpl = preg_replace('/(\{[[:alnum:]]+)\.([[:alnum:]]+(:[a-z]+)?\})/', '$1->$2', $tmpl);
         $tmpl = preg_replace('/\{([[:alnum:]_>-]*):h\}/', '<?php echo $$1; ?>', $tmpl);
         $tmpl = preg_replace('/\{([[:alnum:]_>-]*):n\}/', '<?php echo nl2br(htmlspecialchars($$1)); ?>', $tmpl);
         $tmpl = preg_replace('/\{([[:alnum:]_>-]*)\}/', '<?php echo htmlspecialchars($$1); ?>', $tmpl);
 
-
-        return $tmpl;
+        file_put_contents($cacheFile, $tmpl);
     }
     public function showCache($__cacheFile__, $__vars__)
     {
