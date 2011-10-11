@@ -77,5 +77,6 @@ class Yokaze_Request
         $location .= $this->host;
         $location .= preg_replace('|/[^/]+\.php$|', "/$fileName", $_SERVER['SCRIPT_NAME']);
         header("Location: $location");
+        exit;
     }
 }
