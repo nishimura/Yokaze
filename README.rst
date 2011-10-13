@@ -29,6 +29,7 @@ Add template file of top page::
    echo 'Hello {foo}' > template/index.html
 
 Using Request class::
+
    require_once 'Yokaze/Request.php';
    $r = new Yokaze_Request($vars);
    $t->show($r);
