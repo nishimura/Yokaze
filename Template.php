@@ -2,8 +2,8 @@
 
 class Yokaze_Template
 {
-    private $templateDir = 'template';
-    private $cacheDir = 'cache';
+    protected $templateDir = 'template';
+    protected $cacheDir = 'cache';
     private $ext = 'html';
     private $vars;
     public function __construct($templateDir = null, $cacheDir = null)
@@ -34,7 +34,7 @@ class Yokaze_Template
 
         $this->showCache($cacheFile, $vars);
     }
-    private function compile($tmplFile, $cacheFile)
+    protected function compile($tmplFile, $cacheFile)
     {
         if (file_exists($cacheFile) && filemtime($tmplFile) <= filemtime($cacheFile)){
             return;
@@ -44,12 +44,7 @@ class Yokaze_Template
 
         // include feature
         $incPattern = '|{include:([[:alnum:]/]+\.html)}|';
-        if (preg_match_all($incPattern, $tmpl, $matches)){
-            foreach ($matches[1] as $file){
-                $t = $this->templateDir . '/' . $file;
-                $c = $this->cacheDir . '/' . $file;
-                $this->compile($t, $c);
-            }
+        if (preg_match($incPattern, $tmpl)){
             $incReplace =
                 '<?php $this->compile(\'' .
                 $this->templateDir . '/$1\', \'' .
@@ -66,7 +61,7 @@ class Yokaze_Template
 
         file_put_contents($cacheFile, $tmpl);
     }
-    public function showCache($__cacheFile__, $__vars__)
+    private function showCache($__cacheFile__, $__vars__)
     {
         foreach ($__vars__ as $k => $v)
             $$k = $v;
