@@ -53,12 +53,13 @@ class Yokaze_Parser extends Yokaze_Template
 
         $ret = '';
         $append = null;
-        $pattern = '/^loop:([[:alnum:].]+):([[:alnum:]]+)(:[[:alnum:]]+)?/';
+        $loop = '/^loop:([[:alnum:].]+):([[:alnum:]]+)(:[[:alnum:]]+)?/';
+        $if = '/^if(el)?:([[:alnum:].<>=\(\)$-]+)/';
         for ($i = 0; $i < $length;){
             $char = $val[$i];
 
             $sub = substr($val, $i);
-            if (!$append && preg_match($pattern, $sub, $m)){
+            if (!$append && preg_match($loop, $sub, $m)){
 
                 $ite = str_replace('.', '->', $m[1]);
                 if (isset($m[3])){
@@ -69,8 +70,23 @@ class Yokaze_Parser extends Yokaze_Template
                 }
                 $parsed = '';
                 $len = strlen($m[0]);
-                $this->tagStack[] = array('tag' => $tagName,
-                                          'php' => 'foreach');
+                $this->tagStack[count($this->tagStack)-1]['php'] = 'endforeach';
+
+            }else if (!$append && preg_match($if, $sub, $m)){
+                if ($m[1]){
+                    $this->tagStack[count($this->tagStack)-1]['php'] = 'else:';
+                }else{
+                    $this->tagStack[count($this->tagStack)-1]['php'] = 'endif';
+                }
+                $v = str_replace('.', '->', $m[2]);
+                $append = "<?php if ($v): ?>";
+                $parsed = '';
+                $len = strlen($m[0]);
+
+            }else if (!$append && preg_match('/else:/', $sub, $m)){
+                $this->tagStack[count($this->tagStack)-1]['php'] = 'endif';
+                $parsed = '';
+                $len = strlen($m[0]);
 
             }else if ($char === '{'){
                 list($parsed, $len) = $this->parseVal(substr($buf, $i));
@@ -93,7 +109,7 @@ class Yokaze_Parser extends Yokaze_Template
             $tag = array_pop($this->tagStack);
             if ($tag['tag'] === $closeTag){
                 if ($tag['php'])
-                    return '<?php end' . $tag['php'] . ' ?>';
+                    return '<?php ' . $tag['php'] . ' ?>';
                 else
                     return '';
             }
