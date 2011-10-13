@@ -206,7 +206,7 @@ class Yokaze_Parser extends Yokaze_Template
     protected function compile($tmplFile, $cacheFile)
     {
         if (file_exists($cacheFile) && filemtime($tmplFile) <= filemtime($cacheFile)){
-            //return;
+            return;
         }
 
         $tmpl = file_get_contents($tmplFile);
