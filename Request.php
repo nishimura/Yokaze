@@ -2,19 +2,19 @@
 
 class Yokaze_Request
 {
-    private $https;
-    private $host;
+    private $__https__;
+    private $__host__;
     public function __construct($vars = array())
     {
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-            $this->https = true;
+            $this->__https__ = true;
         else
-            $this->https = false;
+            $this->__https__ = false;
 
         if (isset($_SERVER['HTTP_HOST']))
-            $this->host = $_SERVER['HTTP_HOST'];
+            $this->__host__ = $_SERVER['HTTP_HOST'];
         else
-            $this->host = gethostname();
+            $this->__host__ = gethostname();
 
         foreach ($vars as $k => $v)
             $this->$k = $v;
@@ -70,11 +70,11 @@ class Yokaze_Request
 
     public function redirect($fileName)
     {
-        if ($this->https)
+        if ($this->__https__)
             $location = 'https://';
         else
             $location = 'http://';
-        $location .= $this->host;
+        $location .= $this->__host__;
         $location .= preg_replace('|/[^/]+\.php$|', "/$fileName", $_SERVER['SCRIPT_NAME']);
         header("Location: $location");
         exit;
