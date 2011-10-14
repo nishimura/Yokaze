@@ -45,7 +45,7 @@ class Yokaze_Parser extends Yokaze_Template
 
     private function parseAttr($tagName, $close, $buf)
     {
-        if (!preg_match("/^$close([^$close]+)$close/", $buf, $matches))
+        if (!preg_match("/^$close([^$close]*)$close/", $buf, $matches))
             return array($buf[0], 1);
 
         $val = $matches[1];
