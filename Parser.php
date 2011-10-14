@@ -45,7 +45,7 @@ class Yokaze_Parser extends Yokaze_Template
 
     private function parseAttr($tagName, $close, $buf)
     {
-        if (!preg_match("/$close([^$close]+)$close/", $buf, $matches))
+        if (!preg_match("/^$close([^$close]+)$close/", $buf, $matches))
             return array($buf[0], 1);
 
         $val = $matches[1];
@@ -83,7 +83,7 @@ class Yokaze_Parser extends Yokaze_Template
                 $parsed = '';
                 $len = strlen($m[0]);
 
-            }else if (!$append && preg_match('/else:/', $sub, $m)){
+            }else if (!$append && preg_match('/^else:/', $sub, $m)){
                 $this->tagStack[count($this->tagStack)-1]['php'] = 'endif';
                 $parsed = '';
                 $len = strlen($m[0]);
@@ -158,14 +158,14 @@ class Yokaze_Parser extends Yokaze_Template
     }
     private function parseVal($buf)
     {
-        if (!preg_match('/{([[:alnum:]\.:_]+)}/', $buf, $matches))
+        if (!preg_match('/^{([[:alnum:]\.:_]+)}/', $buf, $matches))
             return array($buf[0], 1);
 
         $name = $matches[1];
         $len = strlen($name) + 2;
 
         // special replacement
-        if (preg_match('|include:([[:alnum:]/]+\.html)|', $name, $matches)){
+        if (preg_match('|^include:([[:alnum:]/]+\.html)|', $name, $matches)){
             $file = $matches[1];
             $templateFile = $this->templateDir . "/$file";
             $cacheFile = $this->cacheDir . "/$file";
