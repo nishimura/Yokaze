@@ -53,8 +53,8 @@ class Yokaze_Parser extends Yokaze_Template
 
         $ret = '';
         $append = null;
-        $loop = '/^loop:([[:alnum:].]+):([[:alnum:]]+)(:[[:alnum:]]+)?/';
-        $if = '/^if(el)?:([[:alnum:].<>=\(\)$-]+)/';
+        $loop = '/^loop:([[:alnum:].]+):([[:alnum:]_]+)(:[[:alnum:]]+)?/';
+        $if = '/^if(el)?:([[:alnum:].<>=\(\)$_-]+)/';
         for ($i = 0; $i < $length;){
             $char = $val[$i];
 
