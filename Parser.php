@@ -89,7 +89,7 @@ class Yokaze_Parser extends Yokaze_Template
                 $len = strlen($m[0]);
 
             }else if ($char === '{'){
-                list($parsed, $len) = $this->parseVal(substr($buf, $i));
+                list($parsed, $len) = $this->parseVal(substr($val, $i));
 
             }else{
                 $parsed = $char;
