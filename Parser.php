@@ -79,7 +79,7 @@ class Yokaze_Parser extends Yokaze_Template
                     $this->tagStack[count($this->tagStack)-1]['php'] = 'endif';
                 }
                 $v = str_replace('.', '->', $m[2]);
-                $append = "<?php if ($v): ?>";
+                $append = "<?php if (\$$v): ?>";
                 $parsed = '';
                 $len = strlen($m[0]);
 
