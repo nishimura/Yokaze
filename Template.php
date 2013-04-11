@@ -6,6 +6,7 @@ class Yokaze_Template
     protected $cacheDir = 'cache';
     private $ext = 'html';
     private $vars;
+    private $file;
     public function __construct($templateDir = null, $cacheDir = null)
     {
         if ($templateDir)
@@ -22,11 +23,21 @@ class Yokaze_Template
     {
         $this->vars = $vars;
     }
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
+    public function getFile()
+    {
+        if ($this->file)
+            return $this->file;
+        return basename($_SERVER['SCRIPT_FILENAME'], '.php') . '.' . $this->ext;
+    }
     public function show($vars = null)
     {
         if ($vars === null)
             $vars = $this->vars;
-        $file = basename($_SERVER['SCRIPT_FILENAME'], '.php') . '.' . $this->ext;
+        $file = $this->getFile();
         $tmplFile = $this->templateDir . '/' . $file;
         $cacheFile = $this->cacheDir . '/' . $file;
 
